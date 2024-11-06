@@ -1,0 +1,73 @@
+
+package internals;
+
+import java.util.Scanner;   // For user input
+import java.util.Random;    // To generate random numbers
+import java.util.Arrays;    // To use Arrays utility for easy array printing
+
+public class Qs {
+
+    // Method to implement QuickSort on an array
+    public static void qs(int[] arr, int low, int high) {
+        if (low < high) {            // Base condition: ensure valid indices
+          int pi = partition(arr, low, high);// Partition the array and get the pivot index
+            qs(arr, low, pi - 1);      // Recursively sort the left part
+            qs(arr, pi + 1, high);    // Recursively sort the right part
+        }
+    }
+
+    // Method to partition the array and return pivot index
+    public static int partition(int[] arr, int low, int high) {
+        int pivot = arr[low];      // Choose the first element as the pivot
+        int i = low;                        // Start index from low
+        int j = high;                      // Start index from high
+
+        while (i < j) {                    // Loop until pointers meet
+            while (i <= high - 1 && arr[i] <= pivot) { // Increment 'i' until we find an element > pivot
+                i++;
+            }
+            while (j >= low + 1 && arr[j] > pivot) {   // Decrement 'j' until we find an element <= pivot
+                j--;
+            }
+            if (i < j) {  // Swap arr[i] and arr[j] if i and j have not crossed
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        
+        // Place the pivot element in its correct position
+        int temp = arr[low];
+        arr[low] = arr[j];
+        arr[j] = temp;
+
+        return j;                // Return the pivot index
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);       // Scanner for user input
+    Random rand = new Random(); // Random object for generating random integers
+
+        System.out.println("Enter the size of the array:");
+        int size = sc.nextInt();                // Read the size of the array
+        int[] arr = new int[size];      // Initialize the array with given size
+
+        // Fill the array with random integers between 0 and 99
+        for (int i = 0; i < size; i++) {
+            arr[i] = rand.nextInt(100);
+        }
+
+        System.out.println("Array before sorting: " + Arrays.toString(arr)); // Print unsorted array
+
+        // Record start time, perform QuickSort, and then record end time
+        long start = System.nanoTime();
+        qs(arr, 0, arr.length - 1);      // Sort the array using QuickSort
+        long end = System.nanoTime();
+        long duration = end - start;   // Calculate duration of the sorting
+
+        System.out.println("Array after sorting: " + Arrays.toString(arr));
+ System.out.println("Duration: " + duration + " ns");// Print duration in 
+        
+        sc.close();                                    // Close the scanner
+    }
+}

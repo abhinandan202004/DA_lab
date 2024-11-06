@@ -1,0 +1,71 @@
+package internals;
+import java.util.*;
+public class Kruskal {
+int []parent;
+public Kruskal(int n) {
+parent= new int[n+1];
+}
+int find(int m) {
+	int p =m;
+	while (parent[p]!=0) {
+		p=parent[p];
+	}
+	return p;
+}
+void union(int i, int j) {
+	parent[j]=i;
+}
+void krkl(int [][]a,int n) {
+	int i,j,min,sum=0,k=1;
+	int u=0,v=0;
+	while(k<n) {
+		min=Integer.MAX_VALUE;
+		for( i =1; i<=n;i++) {
+			for(j=1;j<=n;j++) {
+				if(a[i][j]>0 && min>a[i][j] && i!=j ) {
+					min=a[i][j];
+					u=i;
+					v=j;
+				}
+			}
+		}
+		 i =find(u);
+		 j= find(v);
+		 if(i!=j) {
+			 union(i,j);
+			 System.out.println("("+u+","+v+")"+"="+min);
+			 k++;
+			 sum+=min;
+		 }
+		 a[u][v]=a[v][u]=Integer.MAX_VALUE;
+	}
+	System.out.println("Miimum Cost"+sum);
+}
+public static void main(String[]args) {
+	Scanner sc = new Scanner(System.in);
+	System.out.println("Enter thenumber of vertices:  ");
+	 int n= sc.nextInt();
+	 int [][]a =new int[n+1][n+1];
+	 System.out.println("Enter the adjacency matrix  ");
+	 for(int i =1;i<=n;i++) {
+		 for(int j=1;j<=n;j++) {
+			 a[i][j]=sc.nextInt();
+		 }
+	 }
+	 Kruskal k = new Kruskal(n);
+	 k.krkl(a, n);
+	 sc.close();
+	 
+}
+}
+Enter thenumber of vertices:  
+3
+Enter the adjacency matrix  
+
+10 20 30
+20 30 40
+30 40 50
+(1,2)=20
+(1,3)=30
+Miimum Cost50
+

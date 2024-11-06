@@ -1,0 +1,69 @@
+import java.util.*;
+
+public class SimpleTopologicalSort {
+    private int V;
+    private List<Integer>[] adjList;
+
+    public SimpleTopologicalSort(int v) {
+        V = v;
+        adjList = new LinkedList[v];
+        for (int i = 0; i < v; i++)
+            adjList[i] = new LinkedList<>();
+    }
+
+    private void addEdge(int v, int w) {
+        adjList[v].add(w);
+    }
+
+    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
+        visited[v] = true;
+        for (int neighbor : adjList[v]) {
+            if (!visited[neighbor]) {
+                topologicalSortUtil(neighbor, visited, stack);
+            }
+        }
+        stack.push(v);
+    }
+
+    public void topologicalSort() {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                topologicalSortUtil(i, visited, stack);
+            }
+        }
+        System.out.println("Topological Sort:");
+        while (!stack.isEmpty()) {
+            System.out.print(stack.pop() + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of vertices: ");
+        int V = scanner.nextInt();
+        SimpleTopologicalSort g = new SimpleTopologicalSort(V);
+        
+        System.out.println("Enter the edges (format: from to), -1 to end:");
+        while (true) {
+            int from = scanner.nextInt();
+            if (from == -1) break;
+            int to = scanner.nextInt();
+            g.addEdge(from, to);
+        }
+        
+        g.topologicalSort();
+        scanner.close();
+    }
+}
+Enter the number of vertices: 5
+Enter the edges (format: from to), -1 to end:
+0 1
+0 2
+1 3
+2 3
+3 4
+-1
+Topological Sort:
+0 2 1 3 4 
