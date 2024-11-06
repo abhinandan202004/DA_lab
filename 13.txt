@@ -1,68 +1,44 @@
 package internals;
 
-public class NQueenProblem {
-final int n=3;
-void printSolution(int [][]board) {
-	for(int i=0;i<n;i++) {
-		for(int j=0;j<n;j++) {
-if(board[i][j]==1) {
-	System.out.print("Q");
-}else {
-	System.out.print(".");
+import java.util.*;
+
+public class TSP {
+static int n=3;
+static int max=Integer.MAX_VALUE;
+static int [][]dist= {
+		{0,10,15},
+		{10,0,20},
+		{15,20,0}
+};
+static int [][]dp;
+static boolean []visited;
+static int tsp(int pos, int count) {
+	if(count==n) {
+		return dist[pos][0];
 	}
-}
-		System.out.println();	
+	if(dp[pos][count]!=-1) {
+		return dp[pos][count];
 	}
-}
-boolean isSafe(int[][]board,int row,int col) {
-	int i,j;
-	for(i=0;i<col;i++) {
-		if(board[row][i]==1) {
-		return false;
+	int minCost=max;
+	for(int city=0;city<n;city++) {
+		if(!visited[city]) {
+			visited[city]=true;
+			int newCost=dist[pos][city]+tsp(city,count+1);
+			minCost=Math.min(minCost, newCost);
+			visited[city]=false;
 		}
 	}
-    for(i=row,j=col;i>=0&&j>=0;i--,j--) {
-    if(board[i][j]==1) {
-    	return false;
-    }
-    }
-for(i=row,j=col;i<n&&j>=0;i++,j--) {
-	if(board[i][j]==1) {
-		return false;
-	}
-}
-	return true;	
-}
-boolean solveNQUtil(int[][]board,int col) {
-	if(col>=n)return true;
-	for(int i=0;i<n;i++) {
-		if(isSafe(board,i,col)) {
-			board[i][col]=1;
-		
-		if(solveNQUtil(board,col+1)) {
-			return true;
-		}
-		board[i][col]=0;
-	}
-	}
-	return false;
-}
-boolean solveNQ() {
-	int [][]board= {
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0}
-	};
-	if(!solveNQUtil(board,0)) {
-		System.out.println("No SOlution");
-		return false;
-	}
-	printSolution(board);
-	return true;
+	dp[pos][count]=minCost;
+	return minCost;
 }
 public static void main(String[]args) {
-	NQueenProblem queen = new NQueenProblem();
-	queen.solveNQ();
+	dp=new int[n][n+1];
+	for(int[] row:dp) {
+		Arrays.fill(row, -1);
+	}
+	visited=new boolean[n];
+	visited[0]=true;
+	int ans=tsp(0,1);
+	  System.out.println("The cost of the most efficient tour = " + ans);//45
 }
-
 }

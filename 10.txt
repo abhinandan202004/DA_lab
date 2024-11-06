@@ -1,71 +1,93 @@
-package internals;
 import java.util.*;
-public class Kruskal {
-int []parent;
-public Kruskal(int n) {
-parent= new int[n+1];
-}
-int find(int m) {
-	int p =m;
-	while (parent[p]!=0) {
-		p=parent[p];
-	}
-	return p;
-}
-void union(int i, int j) {
-	parent[j]=i;
-}
-void krkl(int [][]a,int n) {
-	int i,j,min,sum=0,k=1;
-	int u=0,v=0;
-	while(k<n) {
-		min=Integer.MAX_VALUE;
-		for( i =1; i<=n;i++) {
-			for(j=1;j<=n;j++) {
-				if(a[i][j]>0 && min>a[i][j] && i!=j ) {
-					min=a[i][j];
-					u=i;
-					v=j;
-				}
-			}
-		}
-		 i =find(u);
-		 j= find(v);
-		 if(i!=j) {
-			 union(i,j);
-			 System.out.println("("+u+","+v+")"+"="+min);
-			 k++;
-			 sum+=min;
-		 }
-		 a[u][v]=a[v][u]=Integer.MAX_VALUE;
-	}
-	System.out.println("Miimum Cost"+sum);
-}
-public static void main(String[]args) {
-	Scanner sc = new Scanner(System.in);
-	System.out.println("Enter thenumber of vertices:  ");
-	 int n= sc.nextInt();
-	 int [][]a =new int[n+1][n+1];
-	 System.out.println("Enter the adjacency matrix  ");
-	 for(int i =1;i<=n;i++) {
-		 for(int j=1;j<=n;j++) {
-			 a[i][j]=sc.nextInt();
-		 }
-	 }
-	 Kruskal k = new Kruskal(n);
-	 k.krkl(a, n);
-	 sc.close();
-	 
-}
-}
-Enter thenumber of vertices:  
-3
-Enter the adjacency matrix  
 
-10 20 30
-20 30 40
-30 40 50
-(1,2)=20
-(1,3)=30
-Miimum Cost50
+public class Prims {
+    public static void main(String[] args) {
+        int k = 0, min, s, sum = 0, u = 0, v = 0, flag = 0;
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("Enter the no of vertices");
+        int n = sc.nextInt();
+        int[][] w = new int[n + 1][n + 1];
+        int[] sol = new int[n + 1];
+        
+        for (int i = 1; i <= n; i++) {
+            sol[i] = 0;
+        }
+        
+        System.out.println("Enter the weighted graph(adjacency matrix)");
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                int weight = sc.nextInt();
+                if (weight == 0 && i != j) {
+                    w[i][j] = Integer.MAX_VALUE;
+                } else {
+                    w[i][j] = weight;
+                }
+            }
+        }
+        
+        System.out.println("Enter the source vertex from 1 to " + n);
+        s = sc.nextInt();
+        sol[s] = 1;
+        k = 1;
+        
+        while (k <= n - 1) {
+            min = Integer.MAX_VALUE;
+            for (int i = 1; i <= n; i++) {
+                for (int j = 1; j <= n; j++) {
+                    if (sol[i] == 1 && sol[j] == 0) {
+                        if (i != j && min > w[i][j] && w[i][j] != 0) {
+                            min = w[i][j];
+                            u = i;
+                            v = j;
+                        }
+                    }
+                }
+            }
+            sol[v] = 1;
+            k++;
+            sum += min;
+            System.out.println(u + "->" + v + "=" + min);
+        }
+        
+        for (int i = 1; i <= n; i++) {
+            if (sol[i] == 0) {
+                flag = 1;
+                break;
+            }
+        }
+        
+        if (flag == 1) {
+            System.out.println("No MST");
+        } else {
+            System.out.println("Minimum Cost is " + sum);
+        }
+        
+        sc.close();
+    }
+}
+Enter the number of vertices 3
+Enter the weighted graph
+0 20 30
+20 0 40
+30 40 0
+Enter the source vertex
+1
+1->2=20
+1->3=30
+The cost of minimum spanning tree is 50
 
+Ip where edge weight is 0
+Enter the no of vertices
+4
+Enter the weighted graph(adjacency matrix)
+0 1 0 3
+1 0 2 0
+0 2 0 4
+3 0 4 0
+Enter the source vertex from 1 to 4
+1
+1->2=1
+2->3=2
+1->4=3
+minimum Cost is 6

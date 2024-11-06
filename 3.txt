@@ -1,5 +1,3 @@
-package internals;
-
 public class BinarySearchTree {
 
     static class Node {
@@ -36,29 +34,27 @@ public class BinarySearchTree {
     }
 
     void delete(int key) {
-        boolean isDeleted = deleteRec(root, key);
-        if (!isDeleted) {
-            System.out.println("Element " + key + " not found");
-        }
+        root = deleteRec(root, key);
     }
 
-    boolean deleteRec(Node root, int key) {
-        if (root == null) return false;
+    Node deleteRec(Node root, int key) {
+        if (root == null) {
+            System.out.println("Element " + key + " not found in the tree.");
+            return null;
+        }
         if (key < root.key) {
-            return deleteRec(root.left, key);
+            root.left = deleteRec(root.left, key);
         } else if (key > root.key) {
-            return deleteRec(root.right, key);
+            root.right = deleteRec(root.right, key);
         } else {
-            if (root.left == null || root.right == null) {
-                root = (root.left != null) ? root.left : root.right;
-            } else {
-                root.key = minValue(root.right);
-                deleteRec(root.right, root.key);
-            }
-            return true;
-        }
-    }
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
 
+            root.key = minValue(root.right);
+            root.right = deleteRec(root.right, root.key);
+        }
+        return root;
+    }
 
     int minValue(Node root) {
         int minValue = root.key;
@@ -71,6 +67,7 @@ public class BinarySearchTree {
 
     void inorder() {
         inorderRec(root);
+        System.out.println();
     }
 
     void inorderRec(Node root) {
@@ -94,11 +91,15 @@ public class BinarySearchTree {
 
         System.out.println("Inorder traversal:");
         tree.inorder();
-        System.out.println();
 
-        System.out.println("Delete 20:");
-        tree.delete(20);
+        System.out.println("Delete 10:");
+        tree.delete(10);
         tree.inorder();
-        System.out.println();
+        System.out.println("Delete 50:");
+        tree.delete(50);
+        tree.inorder();
+
+        tree.insert(45);
+        tree.inorder();
     }
 }

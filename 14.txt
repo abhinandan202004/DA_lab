@@ -1,49 +1,68 @@
 package internals;
-import java.util.*;
-public class SubSetSum {
-public static boolean subset(int[]arr,int sum, ArrayList<Integer> subset) {
-	int n= arr.length;
-	boolean [][]dp=new boolean[n+1][sum+1];
+
+public class NQueenProblem {
+final int n=3;
+void printSolution(int [][]board) {
 	for(int i=0;i<n;i++) {
-		dp[i][0]=true;
+		for(int j=0;j<n;j++) {
+if(board[i][j]==1) {
+	System.out.print("Q");
+}else {
+	System.out.print(".");
 	}
-	for(int i=1;i<=n;i++) {
-		for(int j=1;j<=sum;j++) {
-			if(j>=arr[i-1]) {
-				dp[i][j]=dp[i-1][j]||dp[i-1][j-arr[i-1]];
-			}else {
-				dp[i][j]=dp[i-1][j];
-			}
+}
+		System.out.println();	
+	}
+}
+boolean isSafe(int[][]board,int row,int col) {
+	int i,j;
+	for(i=0;i<col;i++) {
+		if(board[row][i]==1) {
+		return false;
 		}
 	}
-	if(dp[n][sum]==false) {return false;}
-	int i=n,j=sum;
-	while(i>0&&j>0) {
-		if(dp[i][j]!=dp[i-1][j]) {
-			subset.add(arr[i-1]);
-			j-=arr[i-1];
-		}
-		i--;
+    for(i=row,j=col;i>=0&&j>=0;i--,j--) {
+    if(board[i][j]==1) {
+    	return false;
+    }
+    }
+for(i=row,j=col;i<n&&j>=0;i++,j--) {
+	if(board[i][j]==1) {
+		return false;
 	}
+}
+	return true;	
+}
+boolean solveNQUtil(int[][]board,int col) {
+	if(col>=n)return true;
+	for(int i=0;i<n;i++) {
+		if(isSafe(board,i,col)) {
+			board[i][col]=1;
+		
+		if(solveNQUtil(board,col+1)) {
+			return true;
+		}
+		board[i][col]=0;
+	}
+	}
+	return false;
+}
+boolean solveNQ() {
+	int [][]board= {
+			{0,0,0,0},
+			{0,0,0,0},
+			{0,0,0,0}
+	};
+	if(!solveNQUtil(board,0)) {
+		System.out.println("No SOlution");
+		return false;
+	}
+	printSolution(board);
 	return true;
 }
 public static void main(String[]args) {
-	Scanner sc= new Scanner(System.in);
-	System.out.println("Enter the size of the arrayv");
-	int n=sc.nextInt();
-	int[]arr=new int[n];
-	System.out.println("Enter the elements");
-	for(int i=0;i<n;i++) {
-		arr[i]=sc.nextInt();
-	}
-	System.out.println("Enter the target sum");
-	int sum=sc.nextInt();
-	ArrayList<Integer> subset= new ArrayList<>();
-	boolean hassubsetsum=subset(arr,sum,subset);
-	if(hassubsetsum) {
-		System.out.println("Subsetsum exists:"+hassubsetsum);
-		System.out.println("Subset contributing to the sum:"+subset);
-	}
-	sc.close();
+	NQueenProblem queen = new NQueenProblem();
+	queen.solveNQ();
 }
+
 }

@@ -1,0 +1,51 @@
+package internals;
+import java.util.*;
+public class Dfs {
+int vertices;
+int [][]adj;
+public Dfs(int v ) {
+	vertices=v;
+	adj= new int[v][v];
+}
+public void addEdge(int u, int v) {
+	adj[u][v]=1;
+	adj[v][u]=1;
+}
+public void dfs(int startvertex, boolean []visited) {
+System.out.print(startvertex+" ");
+visited[startvertex]=true;
+for(int i=0;i<vertices;i++) {
+	if(adj[startvertex][i]==1&&!visited[i]) {
+	dfs(i,visited);
+	}
+}
+}
+public static void main(String[]args) {
+	Scanner sc= new Scanner(System.in);
+	System.out.print("enter no of vertices");
+	int v=sc.nextInt();
+	Dfs d= new Dfs(v);
+	System.out.println("Enter the adjacency matrix:");
+    for (int i = 0; i < v; i++) {
+        for (int j = 0; j < v; j++) {
+            d.adj[i][j] = sc.nextInt();
+        }
+    }
+    System.out.print("Enter the starting vertex for DFS: ");
+    int startVertex = sc.nextInt();
+   
+    boolean[] visited = new boolean[v];
+    System.out.print("DFS traversal starting from vertex " + startVertex + ": ");
+    d.dfs(startVertex, visited);
+sc.close();
+}
+}
+
+enter no of vertices4
+Enter the adjacency matrix:
+0 1 0 1
+1 0 1 0
+0 1 0 1
+1 0 1 0
+Enter the starting vertex for DFS: 0
+DFS traversal starting from vertex 0: 0 1 2 3 
